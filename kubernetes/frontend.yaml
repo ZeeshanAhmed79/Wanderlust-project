@@ -1,3 +1,41 @@
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: frontend-deployment
+#   namespace: wanderlust
+#   labels:
+#     app: frontend
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: frontend
+#   template:
+#     metadata:
+#       name: frontend
+#       labels:
+#         app: frontend
+#     spec:
+#       containers:
+#         - name: frontend
+#           image: rithwik504/wanderlust-frontend-beta:v1
+#           ports:
+#             - containerPort: 5173
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: frontend-service
+#   namespace: wanderlust
+# spec:
+#   type: LoadBalancer
+#   selector:
+#     app: frontend
+#   ports:
+#     - port: 5173
+#       targetPort: 5173
+#       protocol: TCP
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -12,15 +50,14 @@ spec:
       app: frontend
   template:
     metadata:
-      name: frontend
       labels:
         app: frontend
     spec:
       containers:
         - name: frontend
-          image: rithwik504/wanderlust-frontend-beta:v1
+          image: rithwik504/wanderlust-frontend-beta:v2
           ports:
-            - containerPort: 5173
+            - containerPort: 80
 ---
 apiVersion: v1
 kind: Service
@@ -32,6 +69,6 @@ spec:
   selector:
     app: frontend
   ports:
-    - port: 5173
-      targetPort: 5173
+    - port: 80
+      targetPort: 80
       protocol: TCP
