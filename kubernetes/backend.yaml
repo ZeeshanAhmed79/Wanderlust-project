@@ -3,8 +3,6 @@ kind: Deployment
 metadata:
   name: backend-deployment
   namespace: wanderlust
-  labels:
-    app: backend
 spec:
   replicas: 1
   selector:
@@ -12,15 +10,16 @@ spec:
       app: backend
   template:
     metadata:
-      name: backend
       labels:
         app: backend
     spec:
       containers:
         - name: backend
-          image: rithwik504/wanderlust-backend-beta:v1
+          image: zeeshanshaikh799/backend:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
+
 ---
 apiVersion: v1
 kind: Service
@@ -32,8 +31,9 @@ spec:
   selector:
     app: backend
   ports:
-    - port: 80
+    - port: 8080
       targetPort: 8080
+
 
 
 

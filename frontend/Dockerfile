@@ -91,19 +91,20 @@
     
 
 # ------------------- Stage 1: Build Stage ------------------------------
+# ------------------- Stage 1: Build Stage ------------------------------
     FROM node:21 AS frontend-builder
 
     WORKDIR /app
     
-    # Copy package files and install dependencies
+    # Install dependencies
     COPY package*.json ./
     RUN npm install
     
-    # Copy all source files
+    # Copy app source
     COPY . .
     
-    # Copy environment variables (VITE_API_PATH must be defined here)
-    COPY .env.docker .env.production
+    # Copy production environment file
+    COPY .env.production .env.production
     
     # Build the frontend for production
     RUN npm run build
@@ -120,5 +121,5 @@
     # Expose port 80
     EXPOSE 80
     
-    # Start Nginx
     CMD ["nginx", "-g", "daemon off;"]
+    

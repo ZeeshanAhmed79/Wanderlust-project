@@ -35,14 +35,11 @@
 #     - port: 5173
 #       targetPort: 5173
 #       protocol: TCP
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend-deployment
   namespace: wanderlust
-  labels:
-    app: frontend
 spec:
   replicas: 1
   selector:
@@ -55,15 +52,11 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: rithwik504/wanderlust-frontend-beta:v2   # Ensure this exact image exists on Docker Hub
-          imagePullPolicy: Always                          # Always pull latest image
+          image: zeeshanshaikh799/wanderlust-frontend:latest
+          imagePullPolicy: Always
           ports:
-            - containerPort: 80                            # Nginx serves on port 80
-          env:
-            - name: VITE_API_PATH
-              value: "http://backend-service:8080"       # Backend service URL inside cluster
+            - containerPort: 80
       restartPolicy: Always
-
 ---
 apiVersion: v1
 kind: Service
@@ -75,8 +68,7 @@ spec:
   selector:
     app: frontend
   ports:
-    - port: 80        # Public LB port
-      targetPort: 80 # Nginx listens on port 80
+    - port: 80
+      targetPort: 80
       protocol: TCP
-
 
