@@ -28,9 +28,9 @@ metadata:
   name: frontend-service
   namespace: wanderlust
 spec:
-  type: NodePort
+  type: LoadBalancer
   selector:
-    app: LoadBalancer
+    app: frontend
   ports:
     - port: 5173
       targetPort: 5173
