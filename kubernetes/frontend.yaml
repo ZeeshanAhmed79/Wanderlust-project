@@ -55,9 +55,15 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: rithwik504/wanderlust-frontend-beta:v2
+          image: rithwik504/wanderlust-frontend-beta:v2   # Ensure this exact image exists on Docker Hub
+          imagePullPolicy: Always                          # Always pull latest image
           ports:
-            - containerPort: 80
+            - containerPort: 80                            # Nginx serves on port 80
+          env:
+            - name: VITE_API_PATH
+              value: "http://backend-service:8080"       # Backend service URL inside cluster
+      restartPolicy: Always
+
 ---
 apiVersion: v1
 kind: Service
@@ -72,3 +78,4 @@ spec:
     - port: 80
       targetPort: 80
       protocol: TCP
+
