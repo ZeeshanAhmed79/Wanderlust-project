@@ -52,7 +52,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: zeeshanshaikh799/wanderlust-frontend:v1.0
+          image: zeeshanshaikh799/wanderlust-frontend:v1.1
           imagePullPolicy: Always
           ports:
             - containerPort: 80
