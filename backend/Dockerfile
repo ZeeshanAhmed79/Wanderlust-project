@@ -33,21 +33,51 @@
 # ---------------- Stage 1: Builder ----------------
 # -------- Stage 1: Build --------
 # ------------ Stage 1: Build ------------
-    FROM node:21 AS builder
+    # FROM node:21 AS builder
 
-    WORKDIR /app
+    # WORKDIR /app
     
-    COPY package*.json ./
-    RUN npm install --production=false
+    # COPY package*.json ./
+    # RUN npm install --production=false
     
-    COPY . .
+    # COPY . .
     
-    FROM node:21-slim
+    # FROM node:21-slim
     
-    WORKDIR /app
+    # WORKDIR /app
     
-    COPY --from=builder /app ./
+    # COPY --from=builder /app ./
     
-    EXPOSE 8080
-    CMD ["npm", "start"]
+    # EXPOSE 8080
+    # CMD ["npm", "start"]
     
+
+
+
+    # ------------ Stage 1: Build ------------
+FROM node:21 AS builder
+
+WORKDIR /app
+
+# Copy package files and install dependencies
+COPY package*.json ./
+RUN npm install --production=false
+
+# Copy all source code
+COPY . .
+
+# ------------ Stage 2: Production ------------
+FROM node:21-slim
+
+WORKDIR /app
+
+# Copy only what is needed from builder stage
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/src ./src
+
+# Expose backend port
+EXPOSE 8080
+
+# Start backend server
+CMD ["npm", "start"]
