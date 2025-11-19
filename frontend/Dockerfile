@@ -90,36 +90,26 @@
     
     
 
-# ------------------- Stage 1: Build Stage ------------------------------
-# ------------------- Stage 1: Build Stage ------------------------------
+# ------------ Build Stage ------------
     FROM node:21 AS frontend-builder
 
     WORKDIR /app
     
-    # Install dependencies
     COPY package*.json ./
     RUN npm install
     
-    # Copy app source
     COPY . .
     
-    # Copy production environment file
-    COPY .env.production .env.production
-    
-    # Build the frontend for production
+    # Vite will read env from process.env injected at build time
     RUN npm run build
     
-    # ------------------- Stage 2: Serve with Nginx --------------------------
+    # ------------ Nginx Stage ------------
     FROM nginx:alpine
     
-    # Remove default nginx static files
     RUN rm -rf /usr/share/nginx/html/*
     
-    # Copy built frontend from builder stage
     COPY --from=frontend-builder /app/dist /usr/share/nginx/html
     
-    # Expose port 80
     EXPOSE 80
-    
     CMD ["nginx", "-g", "daemon off;"]
     

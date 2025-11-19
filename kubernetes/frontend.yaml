@@ -56,7 +56,6 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 80
-      restartPolicy: Always
 ---
 apiVersion: v1
 kind: Service
@@ -71,4 +70,3 @@ spec:
     - port: 80
       targetPort: 80
       protocol: TCP
-

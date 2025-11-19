@@ -31,33 +31,27 @@
 # CMD ["npm", "start"]
 
 # ---------------- Stage 1: Builder ----------------
+# -------- Stage 1: Build --------
     FROM node:21 AS builder
 
     WORKDIR /app
     
-    # Copy package files
     COPY package*.json ./
+    RUN npm install --production=false
     
-    # Install dependencies
-    RUN npm install
-    
-    # Copy source code
     COPY . .
     
-    # Run tests (optional)
-    # RUN npm run test
+    # RUN npm run test   # optional
     
-    # ---------------- Stage 2: Production Image ----------------
+    # -------- Stage 2: Production --------
     FROM node:21-slim
     
     WORKDIR /app
     
-    # Copy only necessary build artifacts
-    COPY --from=builder /app ./
-    
-    # Copy production environment file
-    COPY .env.production .env
+    COPY --from=builder /app/package*.json ./
+    COPY --from=builder /app/node_modules ./node_modules
+    COPY --from=builder /app/src ./src
     
     EXPOSE 8080
+    CMD ["npm", "start"]
     
-    CMD ["npm", "start"]    
