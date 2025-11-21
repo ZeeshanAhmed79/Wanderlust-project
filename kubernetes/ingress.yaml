@@ -4,23 +4,22 @@ metadata:
   name: wanderlust-ingress
   namespace: wanderlust
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
 spec:
-  ingressClassName: nginx
   rules:
-    - host: wanderlust.example.com  # Point your DNS here to the ELB
+    - host: wanderlust.example.com
       http:
         paths:
-          # Backend API
-          - path: /api/?(.*)
+          - path: /api/*
             pathType: Prefix
             backend:
               service:
                 name: backend-service
                 port:
                   number: 8080
-          # Frontend
-          - path: /?(.*)
+
+          - path: /*
             pathType: Prefix
             backend:
               service:
