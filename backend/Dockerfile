@@ -76,14 +76,19 @@
 # ---------------------------
 # STAGE 1 — Builder
 # ---------------------------
+# ---------------------------
+# STAGE 1 — Builder
+# ---------------------------
     FROM node:21 AS builder
     WORKDIR /app
     
-    # Install dependencies
+    # Copy only package files
     COPY package*.json ./
-    RUN npm ci --omit=dev
     
-    # Copy app source
+    # Install ALL dependencies (ignore lockfile mismatches)
+    RUN npm install --legacy-peer-deps
+    
+    # Copy full source code
     COPY . .
     
     # ---------------------------
@@ -94,13 +99,15 @@
     
     ENV NODE_ENV=production
     
-    # Copy only production deps + source code
+    # Copy only required files from builder
     COPY --from=builder /app ./
     
-    # Expose backend port
+    # Install only production deps
+    RUN npm prune --production
+    
     EXPOSE 8080
     
-    # Start the server
     CMD ["npm", "start"]
+    
     
 
