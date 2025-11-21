@@ -123,14 +123,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: frontend-nodeport
+  name: frontend-service
   namespace: wanderlust
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: frontend
   ports:
     - port: 80
       targetPort: 80
-      nodePort: 30080   # <— fixed external port
       protocol: TCP
