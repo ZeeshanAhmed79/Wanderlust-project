@@ -73,30 +73,34 @@
 
 
 
-# Stage 1: Builder
-FROM node:21 AS builder
-WORKDIR /app
-
-# Copy package files and install all dependencies
-COPY package*.json ./
-RUN npm ci
-
-# Copy source code
-COPY . .
-
-# Stage 2: Production
-FROM node:21-slim
-WORKDIR /app
-
-# Set environment
-ENV NODE_ENV=production
-
-# Copy only production dependencies and source code
-COPY --from=builder /app ./
-
-# Expose port
-EXPOSE 8080
-
-# Run the server
-CMD ["npm", "start"]
+# ---------------------------
+# STAGE 1 — Builder
+# ---------------------------
+    FROM node:21 AS builder
+    WORKDIR /app
+    
+    # Install dependencies
+    COPY package*.json ./
+    RUN npm ci --omit=dev
+    
+    # Copy app source
+    COPY . .
+    
+    # ---------------------------
+    # STAGE 2 — Production Image
+    # ---------------------------
+    FROM node:21-slim
+    WORKDIR /app
+    
+    ENV NODE_ENV=production
+    
+    # Copy only production deps + source code
+    COPY --from=builder /app ./
+    
+    # Expose backend port
+    EXPOSE 8080
+    
+    # Start the server
+    CMD ["npm", "start"]
+    
 
