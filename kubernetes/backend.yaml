@@ -110,7 +110,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image:  zeeshanshaikh799/wanderlust-backend:v1.1
+          image:  zeeshanshaikh799/wanderlust-backend:v1.4
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
